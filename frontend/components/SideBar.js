@@ -54,6 +54,7 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
             if(record.primaryRooms !== null) {
               roomMatching = record.primaryRooms.find(room => userOptions.rooms.includes(room.name));
             }
+            console.log(roomMatching)
             if(roomMatching) return true;
           }
 
@@ -62,6 +63,7 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
             if(record.style !== null) {
               styleMatching = record.style.find(style => userOptions.primaryStyle.includes(style.name))
             }
+            console.log(styleMatching)
             if(styleMatching) return true;
           }
 
@@ -91,10 +93,19 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
               let subTypeMatching = undefined;
               if(record.subType !== null && userOptions.sofaShape !== null) {
                 subTypeMatching = record.subType.find(type => type.name.match(/([ABC])\b/g)[0] == userOptions.sofaShape)   
+              }
+              // check if sofa measurements are within 10 inches of uploaded measurements
+              let sofaFits = false;
+              if(record.width !== null && userOptions.sofaWidth !== null) {
+                if((userOptions.sofaWidth > (record.width - 10)) && (userOptions.sofaWidth < (record.width + 10))) {
+                  sofaFits = true;
+                }
               }  
-              if(subTypeMatching) {
+              if(subTypeMatching && sofaFits) {
                 userOptionsFilteredRecords.push(record)
-              }   
+              } else if (subTypeMatching && !sofaFits) {
+                userOptionsFilteredRecords.push(record)
+              }
             } else {
               userOptionsFilteredRecords.push(record)
             }

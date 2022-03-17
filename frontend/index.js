@@ -43,6 +43,7 @@ function Main() {
                 }
                 const readyToShip = record.getCellValue("Ready to ship");
                 const subType = record.getCellValue("Sub-type");
+                const width = parseInt(record.getCellValue("width"));
                 let imgSrc = "";
                 if(img) {
                     const thumbnail = img[0].thumbnails;
@@ -54,7 +55,7 @@ function Main() {
                 if(itemName) {
                     itemName = itemName.trim();
                 }
-                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType};
+                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width};
             })
             
             const typeField = furnitureTable.getFieldByName("Type");  

@@ -59,6 +59,7 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
         if(record.getCellValue("Favorite sofa") !== null) {
             sofaShape = record.getCellValue("Favorite sofa").name;
         }
+        const sofaWidth = record.getCellValue("Sofa width");
         setUserOptions({
             recordId: record.id, 
             rooms: roomsbyName, 
@@ -66,7 +67,8 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
             popOfColor: popOfColor, 
             popOfColorScale:popOfColorScale, 
             availability: availability, 
-            sofaShape: sofaShape
+            sofaShape: sofaShape,
+            sofaWidth: parseInt(sofaWidth),
         })
     }
     return <Select options={quizRecordOptions} value={quizRecordSelected} onChange={handleChange}></Select>
