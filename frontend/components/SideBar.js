@@ -54,7 +54,6 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
             if(record.primaryRooms !== null) {
               roomMatching = record.primaryRooms.find(room => userOptions.rooms.includes(room.name));
             }
-            console.log(roomMatching)
             if(roomMatching) return true;
           }
 
@@ -63,7 +62,6 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
             if(record.style !== null) {
               styleMatching = record.style.find(style => userOptions.primaryStyle.includes(style.name))
             }
-            console.log(styleMatching)
             if(styleMatching) return true;
           }
 
@@ -100,14 +98,16 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
                 if((userOptions.sofaWidth > (record.width - 10)) && (userOptions.sofaWidth < (record.width + 10))) {
                   sofaFits = true;
                 }
-              }  
-              if(subTypeMatching && sofaFits) {
-                userOptionsFilteredRecords.push(record)
-              } else if (subTypeMatching && !sofaFits) {
-                userOptionsFilteredRecords.push(record)
               }
-            } else {
-              userOptionsFilteredRecords.push(record)
+              // check shape
+              let shapeMatch = false;
+              if(record.subType !== null) {
+                const newSubType = record.subType.name;
+                if(userOptions.sofaShape == newSubType) shapeMatch = true;
+              }
+              if(subTypeMatching && sofaFits && shapeMatch) userOptionsFilteredRecords.push(record);
+            }
+            if(userOptions.rooms.includes("Bedroom(s)")) {
             }
           }
         })
@@ -143,7 +143,6 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
         if(sofa) autoPopulateArr.push(sofa);
         // rug...
       }
-      console.log(autoPopulateArr)
       if(autoPopulateArr.length > 0) {
         autoPopulateArr.forEach(record => {
           setDroppedRecords([...droppedRecords, record]);

@@ -42,7 +42,7 @@ function Main() {
                     popOfColor = record.getCellValue("Pop of color")[0].name;
                 }
                 const readyToShip = record.getCellValue("Ready to ship");
-                const subType = record.getCellValue("Sub-type");
+                let subType = record.getCellValue("Sub-type");
                 const width = parseInt(record.getCellValue("width"));
                 let imgSrc = "";
                 if(img) {
