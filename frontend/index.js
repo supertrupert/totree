@@ -22,7 +22,7 @@ function Main() {
             await queryResult.loadDataAsync();
             await quizQueryResult.loadDataAsync();
             const recordsToFilter = queryResult.records;
-            const records = recordsToFilter.filter(record => (record.getCellValue("Type") !== null && record.getCellValue("Vendor") !== null));
+            const records = recordsToFilter.filter(record => (record.getCellValue("Type") !== null && record.getCellValue("Vendor") !== null && record.getCellValue("type-overview") !== null));
             const quizRecords = quizQueryResult.records;
             // default image + name festlegen 
             const recordProps = records.map(record => {
@@ -44,6 +44,7 @@ function Main() {
                 const readyToShip = record.getCellValue("Ready to ship");
                 let subType = record.getCellValue("Sub-type");
                 const width = parseInt(record.getCellValue("width"));
+                const typeOverview = record.getCellValue("type-overview").name;
                 let imgSrc = "";
                 if(img) {
                     const thumbnail = img[0].thumbnails;
@@ -55,7 +56,7 @@ function Main() {
                 if(itemName) {
                     itemName = itemName.trim();
                 }
-                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width};
+                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width, typeOverview};
             })
             
             const typeField = furnitureTable.getFieldByName("Type");  

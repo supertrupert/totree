@@ -101,15 +101,17 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
               }
               // check shape
               let shapeMatch = false;
-              if(record.subType !== null) {
-                const newSubType = record.subType.name;
-                if(userOptions.sofaShape == newSubType) shapeMatch = true;
+              console.log(record.typeOverview)
+              if(record.subType !== null && record.typeOverview == "sofa") {
+                const subTypeNames = record.subType.map(type => type.name.match(/[ABC]/g)[0]);
+                if(subTypeNames.find(type => type == userOptions.sofaShape)) shapeMatch = true;
               }
               if(subTypeMatching && sofaFits && shapeMatch) userOptionsFilteredRecords.push(record);
-            }
+            } 
+
             if(userOptions.rooms.includes("Bedroom(s)")) {
             }
-          }
+          } 
         })
       }
       // filter for final records
