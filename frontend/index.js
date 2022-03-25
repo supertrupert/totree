@@ -42,9 +42,17 @@ function Main() {
                     popOfColor = record.getCellValue("Pop of color")[0].name;
                 }
                 const readyToShip = record.getCellValue("Ready to ship");
-                let subType = record.getCellValue("Sub-type");
+                const subType = record.getCellValue("Sub-type");
                 const width = parseInt(record.getCellValue("width"));
                 const typeOverview = record.getCellValue("type-overview").name;
+                let materials = null;
+                if(record.getCellValue("Materials") !== null) {
+                    materials = record.getCellValue("Materials").name;
+                }
+                let sofaSpecifics = null;
+                if(record.getCellValue("Sofa specifics") !== null) {
+                    sofaSpecifics = record.getCellValue("Sofa specifics");
+                }
                 let imgSrc = "";
                 if(img) {
                     const thumbnail = img[0].thumbnails;
@@ -56,7 +64,7 @@ function Main() {
                 if(itemName) {
                     itemName = itemName.trim();
                 }
-                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width, typeOverview};
+                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width, typeOverview, materials, sofaSpecifics};
             })
             
             const typeField = furnitureTable.getFieldByName("Type");  

@@ -10,7 +10,7 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
     function handleSelectChange (event) {
         setValue(event);
     }
-    
+
     const [filteredRecords, setFilteredRecords] = useState([]);
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [userOptions, setUserOptions] = useState([]);
@@ -40,7 +40,7 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
             if(userOptions.rooms[0].substring(0,5) == "Other" && styleMatching(record)) {
               filterSpecificRoom(record)
               // activate again when using availability function
-              // if(checkAvailability(record)) filterSpecificRoom(record); 
+              // if(checkAvailability(record)) filterSpecificRoom(record);
               return;
             }
             if(roomMatching(record) && styleMatching(record)) {
@@ -87,30 +87,66 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
 
           function filterSpecificRoom (record) {
             if(userOptions.rooms.includes("Living room")) {
-              // check if subtype matches with preference
-              let subTypeMatching = undefined;
-              if(record.subType !== null && userOptions.sofaShape !== null) {
-                subTypeMatching = record.subType.find(type => type.name.match(/([ABC])\b/g)[0] == userOptions.sofaShape)   
-              }
-              // check if sofa measurements are within 10 inches of uploaded measurements
+              // // check if sofa measurements are within 10 inches of uploaded measurements
               let sofaFits = false;
               if(record.width !== null && userOptions.sofaWidth !== null) {
                 if((userOptions.sofaWidth > (record.width - 10)) && (userOptions.sofaWidth < (record.width + 10))) {
                   sofaFits = true;
                 }
               }
-              // check shape
-              let shapeMatch = false;
-              console.log(record.typeOverview)
-              if(record.subType !== null && record.typeOverview == "sofa") {
-                const subTypeNames = record.subType.map(type => type.name.match(/[ABC]/g)[0]);
-                if(subTypeNames.find(type => type == userOptions.sofaShape)) shapeMatch = true;
+              if(isNaN(userOptions.sofaWidth)) sofaFits = true;     
+
+              // check sofa shape
+              let sofaShapeFits = false;
+              if(record.subType !== null) {
+                const sofaShapeMatch = record.subType.filter(type => type.name.includes(`Sofa ${userOptions.sofaShape}`)); 
+                if(sofaShapeMatch.length > 0) sofaShapeFits = true;
               }
-              if(subTypeMatching && sofaFits && shapeMatch) userOptionsFilteredRecords.push(record);
+
+              // check sofa materials
+              let sofaMaterialFits = false;
+              if(userOptions.sofaMaterial == "No preference") sofaMaterialFits = true;
+              if(userOptions.sofaMaterial == "I'm only interested in fabric options") {
+                if(record.materials === "Fabric") sofaMaterialFits = true;  
+              }
+              if(userOptions.sofaMaterial == "I'm only interested in leather options") {
+                if(record.materials === "Leather") sofaMaterialFits = true; 
+              }     
+              
+              // check sofa specifics
+
+              let sofaSpecificsFits = false;
+              let userOptionsArr = [];
+              if(userOptions.sofaSpecifics !== null) {
+                userOptionsArr = userOptions.sofaSpecifics.map(spec => spec.name);
+              }
+              let recordOptionsArr = null;
+              if(record.sofaSpecifics !== null) {
+                recordOptionsArr = record.sofaSpecifics.map(spec => spec.name);
+              }
+              
+              if(userOptionsArr[0] === "No, whatever you think will work best" || userOptionsArr.length === 0) sofaSpecificsFits = true;    
+                 
+              if(record.sofaSpecifics !== null) {     
+                const specificMatch = userOptionsArr.filter(option => recordOptionsArr.includes(option));
+                if(specificMatch.length > 0) sofaSpecificsFits = true;  
+              }      
+              
+              // check for chair type
+              let loungeChairFits = false;
+              if(userOptions.loungeChair !== null) {
+                if(record.subType !== null) {
+                  const subTypeNameArr = record.subType.map(type => type.name.substring(0,14));
+                  if(subTypeNameArr.includes("Lounge chair " + userOptions.loungeChair.name)) loungeChairFits = true;
+                }
+              }
+
+              if(sofaFits && sofaShapeFits && sofaMaterialFits && sofaSpecificsFits) userOptionsFilteredRecords.push(record);
+              if(loungeChairFits) userOptionsFilteredRecords.push(record);
             } 
 
-            if(userOptions.rooms.includes("Bedroom(s)")) {
-            }
+            // if(userOptions.rooms.includes("Bedroom(s)")) {
+            // }
           } 
         })
       }

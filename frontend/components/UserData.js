@@ -60,6 +60,19 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
             sofaShape = record.getCellValue("Favorite sofa").name;
         }
         const sofaWidth = record.getCellValue("Sofa width");
+        let sofaMaterial = null;
+        if(record.getCellValue("Sofa material") !== null) {
+            sofaMaterial = record.getCellValue("Sofa material").name;
+        }
+        
+        let sofaSpecifics = null;
+        if(record.getCellValue("Specifics for sofa") !== null) {
+            sofaSpecifics = record.getCellValue("Specifics for sofa");
+        }
+        let loungeChair = null;
+        if(record.getCellValue("Favorite lounge chair") !== null) {
+            loungeChair = record.getCellValue("Favorite lounge chair");
+        }
         setUserOptions({
             recordId: record.id, 
             rooms: roomsbyName, 
@@ -69,6 +82,9 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
             availability: availability, 
             sofaShape: sofaShape,
             sofaWidth: parseInt(sofaWidth),
+            sofaMaterial: sofaMaterial,
+            sofaSpecifics: sofaSpecifics,
+            loungeChair: loungeChair,
         })
     }
     return <Select options={quizRecordOptions} value={quizRecordSelected} onChange={handleChange}></Select>
