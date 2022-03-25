@@ -141,12 +141,67 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
                 }
               }
 
+              // check for chair material
+              let chairMaterialFits = false;
+              
+              if(userOptions.chairMaterial == "No preference") chairMaterialFits = true;
+              if(userOptions.chairMaterial == "I'm only interested in fabric options") {
+                if(record.materials === "Fabric") chairMaterialFits = true;  
+              }
+              if(userOptions.chairMaterial == "I'm only interested in leather options") {
+                if(record.materials === "Leather") chairMaterialFits = true; 
+              } 
+
               if(sofaFits && sofaShapeFits && sofaMaterialFits && sofaSpecificsFits) userOptionsFilteredRecords.push(record);
-              if(loungeChairFits) userOptionsFilteredRecords.push(record);
+              if(loungeChairFits && chairMaterialFits) userOptionsFilteredRecords.push(record);
             } 
 
-            // if(userOptions.rooms.includes("Bedroom(s)")) {
-            // }
+            if(userOptions.rooms.includes("Bedroom")) {
+              // check for bed size
+              let bedSizeFits = false;
+              if(userOptions.bedSize == "") bedSizeFits = true;
+              if(userOptions.bedSize == record.bedSize) bedSizeFits = true;
+
+              // check bed type
+              let favBedFits = false;
+              if(userOptions.favBed !== null) {
+                if(record.subType !== null) {
+                  const recordSubTypeName = record.subType.map(type => type.name.substring(4,5));
+                  if(recordSubTypeName.includes(userOptions.favBed) && record.typeOverview == "bed") {
+                    favBedFits = true;
+                  } 
+                }
+              } else {
+                favBedFits = true;
+              }
+
+              // check dresser size
+              let dresserFits = false;
+              if(record.width !== null && userOptions.dresserWidth !== null) {
+                if((userOptions.dresserWidth > (record.width - 10)) && (userOptions.dresserWidth < (record.width + 10)) && record.typeOverview == "dresser") {
+                  dresserFits = true;
+                }
+              }
+              if(isNaN(userOptions.dresserWidth) && record.typeOverview == "dresser") dresserFits = true;
+
+              // check nightstand size
+              let nightstandFits = false;
+              if(record.width !== null && userOptions.nightstandWidth !== null) {
+                if((userOptions.nightstandWidth > (record.width - 10)) && (userOptions.nightstandWidth < (record.width + 10)) && record.typeOverview == "nightstand") {
+                  nightstandFits = true;
+                }
+              }
+              if(isNaN(userOptions.dresserWidth) && record.typeOverview == "nightstand") nightstandFits = true;
+
+              // // bedroom additional furniture
+              // if(userOptions.bedroomAddFurniture !== null && userOptions.bedroomAddFurniture[0].name !== "No") {
+              //   console.log(userOptions.bedroomAddFurniture)
+              // }
+
+              if(bedSizeFits && favBedFits) userOptionsFilteredRecords.push(record);
+              if(dresserFits) userOptionsFilteredRecords.push(record);
+              if(nightstandFits) userOptionsFilteredRecords.push(record);
+            }
           } 
         })
       }

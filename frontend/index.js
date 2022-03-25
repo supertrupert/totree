@@ -53,6 +53,10 @@ function Main() {
                 if(record.getCellValue("Sofa specifics") !== null) {
                     sofaSpecifics = record.getCellValue("Sofa specifics");
                 }
+                let bedSize = null;
+                if(record.getCellValue("Bed size") !== null) {
+                    bedSize = record.getCellValue("Bed size").name.trim();
+                }
                 let imgSrc = "";
                 if(img) {
                     const thumbnail = img[0].thumbnails;
@@ -64,7 +68,7 @@ function Main() {
                 if(itemName) {
                     itemName = itemName.trim();
                 }
-                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width, typeOverview, materials, sofaSpecifics};
+                return {imgSrc, itemName, recordUrl, recordId, recordType, primaryRooms, style, size, description, vendor, price, stock, popOfColor, readyToShip, subType, width, typeOverview, materials, sofaSpecifics, bedSize};
             })
             
             const typeField = furnitureTable.getFieldByName("Type");  
