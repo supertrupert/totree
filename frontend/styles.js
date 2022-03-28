@@ -129,7 +129,7 @@ export default `
   .select-item {
     border: solid 2px red;
   }
-
+  
   h3 {
     margin-bottom: 5px;
   }

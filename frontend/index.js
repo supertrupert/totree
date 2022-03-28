@@ -128,7 +128,6 @@ function Main() {
                 <DropBox 
                     recordProps={recordProps} 
                     draggedEl={draggedEl}
-                    recordProps={recordProps}
                     setDroppedRecords={setDroppedRecords}
                     droppedRecords={droppedRecords}
                     currentUser={currentUser}

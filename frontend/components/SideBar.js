@@ -14,6 +14,7 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
     const [filteredRecords, setFilteredRecords] = useState([]);
     const [filteredOptions, setFilteredOptions] = useState([]);
     const [userOptions, setUserOptions] = useState([]);
+    const [room, setRoom] = useState("All");
 
     useEffect(() => {
       handleRecordChange()
@@ -22,7 +23,12 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
     useEffect(() => {
       handleRecordChange();
       setCurrentUser(userOptions.recordId);
+      setRoom(room => userOptions.rooms && userOptions.rooms[0])
     }, [userOptions])
+
+    useEffect(() => {
+      handleRecordChange();
+    }, [room])
 
     function handleRecordChange () {
       // handle no selection case
@@ -52,7 +58,8 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
           function roomMatching (record) {
             let roomMatching = undefined;
             if(record.primaryRooms !== null) {
-              roomMatching = record.primaryRooms.find(room => userOptions.rooms.includes(room.name));
+              // roomMatching = record.primaryRooms.find(room => userOptions.rooms.includes(room.name));
+              roomMatching = record.primaryRooms.find(recRoom => recRoom.name == room)
             }
             if(roomMatching) return true;
           }
@@ -111,7 +118,7 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
               }
               if(userOptions.sofaMaterial == "I'm only interested in leather options") {
                 if(record.materials === "Leather") sofaMaterialFits = true; 
-              }     
+              }
               
               // check sofa specifics
 
@@ -229,30 +236,64 @@ const SideBar = ({ setDraggedEl, options, recordProps, droppedRecords, dropBox, 
         // then only select pieces for living room
         // sofa
         const sofa = filteredRecords.find(record => {
-          if(record.recordType.substring(0,4) == "Sofa") {
+          if(record.typeOverview == "sofa") {
+            return true;
+          }
+        })
+        const rug = filteredRecords.find(record => {
+          if(record.typeOverview == "rug") {
+            return true;
+          }
+        })
+        const chair = filteredRecords.find(record => {
+          if(record.typeOverview == "chair") {
             return true;
           }
         })
         if(sofa) autoPopulateArr.push(sofa);
-        // rug...
+        if(rug) autoPopulateArr.push(rug);
+        if(chair) autoPopulateArr.push(chair);
       }
-      if(autoPopulateArr.length > 0) {
-        autoPopulateArr.forEach(record => {
-          setDroppedRecords([...droppedRecords, record]);
-          setDropBox([...dropBox, {...record, dropbox: 1}]);
+      if(userOptions.rooms.includes("Bedroom")) {
+        const bed = filteredRecords.find(record => {
+          if(record.typeOverview == "bed") {
+            return true;
+          }
         })
+        const nightstand = filteredRecords.find(record => {
+          if(record.typeOverview == "nightstand") {
+            return true;
+          }
+        })
+        const dresser = filteredRecords.find(record => {
+          if(record.typeOverview == "dresser") {
+            return true;
+          }
+        })
+        if(bed) autoPopulateArr.push(bed);
+        if(nightstand) autoPopulateArr.push(nightstand);
+        if(dresser) autoPopulateArr.push(dresser);
+      }
+      const dropBoxAutoPopArr = autoPopulateArr.map(record => ({...record, dropbox: 1}));
+      if(autoPopulateArr.length > 0) {
+        setDroppedRecords(autoPopulateArr);
+        setDropBox(dropBoxAutoPopArr)
       }
     }
 
+    
+
     return (
     <>
-      <h3>Quiz user:</h3>
+      <h3>Customer:</h3>
       <UserData quizRecords={quizRecords} recordActionData={recordActionData} setUserOptions={setUserOptions}></UserData> 
-      <p>Room(s): {userOptions.rooms ? userOptions.rooms.map((room, i, arr) => {if(arr.length - 1 === i) {return room + ""} else {return room + ", "}}) : "No customer selected"}</p>
-      <p>Pop of color: {userOptions.popOfColor ? userOptions.popOfColor + " (Scale: " + userOptions.popOfColorScale + ")" : "No pop of color given"}</p>
+      {/* <p>Room(s): {userOptions.rooms ? userOptions.rooms.map((room, i, arr) => {if(arr.length - 1 === i) {return room + ""} else {return room + ", "}}) : "No customer selected"}</p> */}
+      {/* <p>Pop of color: {userOptions.popOfColor ? userOptions.popOfColor + " (Scale: " + userOptions.popOfColorScale + ")" : "No pop of color given"}</p> */}
+      <h3>Selected room:</h3>
+      <Select style={{minHeight: "32px"}} options={userOptions.rooms && userOptions.rooms.map(room => ({value: room, label: room}))} value={room} onChange={newRoom => setRoom(newRoom)} width="100%"/>
       <h3>Filtered furniture: {filteredRecords.length + " items"}</h3>
       <Button onClick={handleAutoPopulation} marginBottom="10px">Autopopulate</Button>
-      <Select className='select-button' options={filteredOptions} value={value} onChange={handleSelectChange} width="100%"/>
+      <Select style={{minHeight: "32px"}} options={filteredOptions} value={value} onChange={handleSelectChange} width="100%"/>
       <Box overflowY="scroll" border="thick" backgroundColor="lightGray1">
         {value == "All" 
         ? filteredRecords.map(record => {

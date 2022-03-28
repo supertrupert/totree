@@ -4,20 +4,16 @@ import Checkout from './Checkout';
 
 const DropBox = ({recordProps, draggedEl, setDroppedRecords, droppedRecords, currentUser, dropBox, setDropBox}) => {
 
-
-    let draggedRecordOrigIndex = undefined;
-
     const handleDrop = event => {
         event.stopPropagation();
         event.preventDefault();
         const draggedRecord = recordProps.filter(record => record.recordId == draggedEl.current);
-        draggedRecordOrigIndex = recordProps.indexOf(draggedRecord[0]);
         if(event.target.getAttribute("data-id") == 1) {
             // 1= magic value
-            setDropBox([...dropBox, {...draggedRecord[0], dropbox: 1, origPos: draggedRecordOrigIndex}]);
+            setDropBox([...dropBox, {...draggedRecord[0], dropbox: 1}]);
         }
         if(event.target.getAttribute("data-id") == 2) {
-            setDropBox([...dropBox, {...draggedRecord[0], dropbox: 2, origPos: draggedRecordOrigIndex}]);
+            setDropBox([...dropBox, {...draggedRecord[0], dropbox: 2}]);
         }
         setDroppedRecords([...droppedRecords, draggedRecord[0]]);
         event.target.classList.remove("active");
@@ -51,8 +47,8 @@ const DropBox = ({recordProps, draggedEl, setDroppedRecords, droppedRecords, cur
             onDragLeave={handleDragLeave} 
             onDrop={handleDrop}
             data-id="1">
-            {dropBox && dropBoxOne.map(el => {
-                return <DropBoxElement el={el} dropBox={dropBox} setDropBox={setDropBox} droppedRecords={droppedRecords} setDroppedRecords={setDroppedRecords}></DropBoxElement>
+            {dropBox && dropBoxOne.map((el, i) => {
+                return <DropBoxElement key={i} el={el} dropBox={dropBox} setDropBox={setDropBox} droppedRecords={droppedRecords} setDroppedRecords={setDroppedRecords}></DropBoxElement>
             })}          
         </div>
         <div className="drop-box"
@@ -61,8 +57,8 @@ const DropBox = ({recordProps, draggedEl, setDroppedRecords, droppedRecords, cur
             onDragLeave={handleDragLeave} 
             onDrop={handleDrop}
             data-id="2">
-            {dropBox && dropBoxTwo.map(el => {
-                return <DropBoxElement el={el} dropBox={dropBox} setDropBox={setDropBox} droppedRecords={droppedRecords} setDroppedRecords={setDroppedRecords}></DropBoxElement>
+            {dropBox && dropBoxTwo.map((el, i) => {
+                return <DropBoxElement key={i} el={el} dropBox={dropBox} setDropBox={setDropBox} droppedRecords={droppedRecords} setDroppedRecords={setDroppedRecords}></DropBoxElement>
             })}
         </div>
         <Checkout currentUser={currentUser} dropBoxOne={dropBoxOne} dropBoxTwo={dropBoxTwo}></Checkout>

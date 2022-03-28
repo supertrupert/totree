@@ -25,14 +25,14 @@ const RecordCard = ({ record, setDraggedEl, popOfColor }) => {
           {hovering && 
           <div className='recordcard-overlay-div'>
             <div>
-              <p><span>Name:</span> {record.itemName}</p>
-              <p><span>Size:</span> {record.size}</p>
-              <p><span>Description:</span> {record.description}</p>
+              <p><span>Name:</span> {record.itemName && record.itemName.length > 10 ? record.itemName.substring(0,10) + "..." : record.itemName}</p>
+              <p><span>Size:</span> {record.size && record.size.length > 10 ? record.size.substring(0,10) + "..." : record.size}</p>
+              <p><span>Description:</span> {record.description && record.description.length > 10 ? record.description.substring(0,10) + "..." : record.description}</p>
             </div>
             <div>
-              <p><span>Vendor:</span> {record.vendor}</p>
-              <p><span>Price:</span> {record.price}$</p>
-              <p><span>Stock:</span> {record.stock}</p>
+              <p><span>Vendor:</span> {record.vendor && record.vendor.length > 10 ? record.vendor.substring(0,10) + "..." : record.vendor}</p>
+              <p><span>Price:</span> {record.price && record.price}$</p>
+              <p><span>Stock:</span> {record.stock && record.stock}</p>
             </div>         
           </div>}
         </div>

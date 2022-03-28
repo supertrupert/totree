@@ -100,7 +100,7 @@ import React, { useRef, useEffect, useState } from 'react';
     <div 
         className="img-wrap"    
         style={{ left: translate.x, top: translate.y }} 
-        draggable="false" 
+        draggable="false"
         onPointerDown={handlePointerDown} 
         onPointerMove={handlePointerMove} 
         onPointerOver={handleOnPointerOver}

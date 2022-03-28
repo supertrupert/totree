@@ -5,10 +5,15 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
 
     const [quizRecordOptions, setQuizRecordOptions] = useState([]);
     const [quizRecordSelected, setQuizRecordSelected] = useState("");
-    
+
     useEffect(() => {
         const quizRecordOptions = quizRecords.map(record => {
-            const recordName = record.getCellValue("Name");
+            let recordName = null;
+            if(record.getCellValue("Name") == null) {
+                recordName = "Entry has no name"
+            } else {
+                recordName = record.getCellValue("Name")
+            };
             const recordId = record.id;
             return {value: recordId, label: recordName}
         });
@@ -18,8 +23,6 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
             setQuizRecordSelected(quizRecordOptions[0].value)          
         }
     }, [quizRecords])
-
-    // let record = null;
 
     useEffect(() => {
         if(recordActionData !== null) {
@@ -111,7 +114,7 @@ const UserData = ({ quizRecords, recordActionData, setUserOptions }) => {
             bedroomAddFurniture: bedroomAddFurniture,
         })
     }
-    return <Select options={quizRecordOptions} value={quizRecordSelected} onChange={handleChange}></Select>
+    return <Select style={{minHeight: "32px"}} options={quizRecordOptions} value={quizRecordSelected} onChange={handleChange}></Select>
 }
 
 export default UserData
